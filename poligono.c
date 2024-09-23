@@ -426,84 +426,48 @@ int RemovePoligono(int chave, Poligonos * L_Poligono)
  */
 int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligono)
 {
-    // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
-	if (L_Poligono == NULL || L_Poligono->qtdPoligonos == 0) {
-		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel selecionar o poligono!\n");
-		return 0;
-	}
-	// Remover um polígono
-	else {
-		// Variável para manipular os dados da lista
-		Poligono * poligonos = (Poligono *)malloc(sizeof(Poligono));
+    if (L_Poligono == NULL || L_Poligono->qtdPoligonos == 0) {
+        printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel selecionar o poligono!\n");
+        return -1; // Retorne -1 se não houver polígonos
+    }
 
-		// Laço para percorrer a lista de polígonos
-		for (int i = 0; i < L_Poligono->qtdPoligonos; i++) {
-			// Inicializar com os pontos do polígono sendo verificado
-			poligonos[i] = L_Poligono->poligonos[i];
+    for (int i = 0; i < L_Poligono->qtdPoligonos; i++) {    
+        if (VerificaPontoPoligono(L_Poligono, mouseX, mouseY, i)) {
+            return i; // Retorna o índice do polígono selecionado
+        }
+    }
 
-			// Se o ponto passado pertencer ao poligono, retornar a chave da lista de polígonos referente ao polígono
-			if (VerificaPontoPoligono(mouseX, mouseY, &poligonos[i])) {
-				return i;
-			}
-		}
-
-		return 0;
-	}
+    return -1; // Retorne -1 se nenhum polígono for selecionado
 }
 
 /*
  * FUNÇÃO PARA VERIFICAR SE O PONTO PERTENCE AO POLÍGONO
  */
-bool VerificaPontoPoligono(float mouseX, float mouseY, Poligono * poligono)
+int VerificaPontoPoligono(Poligonos *L_Poligono, float mouseX, float mouseY, int indice)
 {
-	// Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
-	if (poligono == NULL) {
-		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel verificar o ponto no poligono!\n");
-		return false;
-	}
-	// Verificar ponto no polígono
-	else {
-		// Variável para registrar caso o ponto faz parte do polígono
-		bool dentroPoligono = false;
+    int qtdLados = L_Poligono->poligonos[indice].qtdLados;
+    float Vx[qtdLados], Vy[qtdLados];
 
-		// Variáveis para auxiliar a manipulação dos dados
-		PontoPoligono * atualPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
-		PontoPoligono * anteriorPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+    PontoPoligono *aux = L_Poligono->poligonos[indice].inicial;
+    int cont = 0;
 
-		// Inicializando as variáveis para manipulação
-		atualPontoPoligono = poligono->inicial;
-		anteriorPontoPoligono = NULL;
+    // Copiando as coordenadas dos vértices do polígono
+    while (aux != NULL) {
+        Vx[cont] = aux->ponto.x;
+        Vy[cont] = aux->ponto.y;
+        aux = aux->prox;
+        cont++;
+    }
 
-		// Laço para percorrer todos os pontos do polígono
-		while (atualPontoPoligono != NULL) {
-			// Conferindo se os pontos do polígono são maiores que os que foram passados
-			// Os pontos do eixo Y devem estar em diferentes lados do eixo X (horizontal)
-			// A expressão é usado para detectar se o raio horizontal se extende a partir do ponto passado com a
-			// coordenada Y, intersectando com a borda definida pelos vertices (pontos) que compoem o polígono
-			// E o ponto passado no eixo X for também menor que a coordenada X
-			// Se ambas as condições forem verdadeiras, significa que o ponto está dentro do polígono
+    int j, c = 0;
+    for (int i = 0, j = qtdLados - 1; i < qtdLados; j = i++) {
+        if (((Vy[i] > mouseY) != (Vy[j] > mouseY)) && 
+            (mouseX < (Vx[j] - Vx[i]) * (mouseY - Vy[i]) / (Vy[j] - Vy[i]) + Vx[i])) {
+            c = !c;
+        }
+    }
 
-			// Checar se os raios se intersectam com a borda entre o ponto anterior e o atual
-			if (anteriorPontoPoligono != NULL &&
-				(anteriorPontoPoligono->ponto.y > mouseY) != (atualPontoPoligono->ponto.y > mouseY) &&
-				(mouseX < (atualPontoPoligono->ponto.x - anteriorPontoPoligono->ponto.x) * (mouseY - anteriorPontoPoligono->ponto.y) / (atualPontoPoligono->ponto.y - anteriorPontoPoligono->ponto.y) + anteriorPontoPoligono->ponto.x)) {
-				dentroPoligono = !dentroPoligono;
-			}
-
-			anteriorPontoPoligono = atualPontoPoligono;
-			atualPontoPoligono = atualPontoPoligono->prox;
-		}
-
-		// Chechar se os raios intesectam com as bordas entre o último e primeiro pontos
-		// Isso é necessário porque o laço não dá a volta para o início, então é necessa'rio pegar o último ponto e comparar com o primeiro
-		if (poligono->qtdLados >= 2 &&
-			(anteriorPontoPoligono->ponto.y > mouseY) != (poligono->inicial->ponto.y > mouseY) &&
-			(mouseX < (poligono->inicial->ponto.x - anteriorPontoPoligono->ponto.x) * (mouseY - anteriorPontoPoligono->ponto.y) / (poligono->inicial->ponto.y - anteriorPontoPoligono->ponto.y) + anteriorPontoPoligono->ponto.x)) {
-			dentroPoligono = !dentroPoligono;
-		}
-
-		return dentroPoligono;
-	}
+    return c; // Retorna 1 se o ponto estiver dentro do polígono, 0 caso contrário
 }
 
 /*

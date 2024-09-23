@@ -176,7 +176,7 @@ int RemovePonto(int chave, Pontos * L_Pontos)
  */
 int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos)
 {
-    int tolerancia = 6; 
+    int tolerancia = 12; 
 
     // Se a lista de pontos não foi criada ou a quantidade de pontos for zero
     if (L_Pontos == NULL || L_Pontos->QtdPontos == 0) {

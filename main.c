@@ -255,57 +255,47 @@ void Teclado(unsigned char key, int x, int y)
     mouseX = x - largura;  // Localização do eixo x (horizontal - largura)
     mouseY = altura - y;   // Localização do eixo y (vertical - altura)
 
-    switch (key) {
-
-        // Excluir objetos selecionados da tela (D - Delete)
-        case 'D':
-        case 'd':
-            ////////// Excluir ponto
-            // Se um ponto está na opção "Selecionar" e a chave contém um valor diferente de -1
-            if (menu == 4 && key != -1) {
-                key = SelecionaPonto(mouseX, mouseY, L_Pontos);
-                if (RemovePonto(key, L_Pontos)) {
-                    ImprimePontos(L_Pontos);
-                    key = -1;
-                }
+    // Verificar a tecla pressionada para excluir objetos selecionados da tela (D - Delete)
+    if (key == 'D' || key == 'd') {
+        
+        // Excluir ponto
+        if (menu == 4 && key != -1) {
+            key = SelecionaPonto(mouseX, mouseY, L_Pontos);
+            if (RemovePonto(key, L_Pontos)) {
+                ImprimePontos(L_Pontos);
+                key = -1;
             }
-
-            ////////// Excluir reta
-            // Se uma reta está na opção "Selecionar" e a chave contém um valor diferente de -1
-            else if (menu == 5 && key != -1) {
-                key = Seleciona_Reta(mouseX, mouseY, L_Retas);
-                if (RemoveReta(key, L_Retas)) {
-                    ImprimeL_Retas(L_Retas);
-                    key = -1;
-                }
+        }
+        
+        // Excluir reta
+        else if (menu == 5 && key != -1) {
+            key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+            if (RemoveReta(key, L_Retas)) {
+                ImprimeL_Retas(L_Retas);
+                key = -1;
             }
-
-            ////////// Excluir polígono
-            // Se um polígono está na opção "Selecionar" e a chave contém um valor diferente de -1
-            else if (menu == 6 && key != -1) {
-                if (RemovePoligono(key, L_Poligonos)) {
-                    ImprimeL_Poligonos(L_Poligonos);
-                    key = -1;
-                }
-            }
-
-            break;
-
-        // Finalizar o polígono (F - Finish)
-        case 'F':
-        case 'f':
-            if (menu == 3 && EstadoDoObjeto == 1) {
-                // Finalizar o desenho do polígono
-                FinalizaPoligono(EstadoDoObjeto, L_Poligonos);
-
-                // finalizarPoligono(statusObjeto, listaPoligonos);
+        }
+        
+        // Excluir polígono
+        else if (menu == 6 && key != -1) {
+            key=SelecionaPoligono(mouseX,mouseY,L_Poligonos);
+            if (RemovePoligono(key, L_Poligonos)) {
                 ImprimeL_Poligonos(L_Poligonos);
-
-                // Mudar status do objeto para ele ser finalizado
-                EstadoDoObjeto = -1;
+                key = -1;
             }
+        }
+    }
 
-            break;        
+    // Verificar a tecla pressionada para finalizar o polígono (F - Finish)
+    else if (key == 'F' || key == 'f') {
+        if (menu == 3 && EstadoDoObjeto == 1) {
+            // Finalizar o desenho do polígono
+            FinalizaPoligono(EstadoDoObjeto, L_Poligonos);
+            ImprimeL_Poligonos(L_Poligonos);
+
+            // Mudar status do objeto para ele ser finalizado
+            EstadoDoObjeto = -1;
+        }
     }
 
     glutPostRedisplay();

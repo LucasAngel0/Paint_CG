@@ -43,7 +43,7 @@ void FinalizaPoligono(int statusObjeto, Poligonos * L_Poligonos);
 void CentroidePoligono(int chave, Poligonos * L_Poligonos);
 int RemovePoligono(int chave, Poligonos * L_Poligonos);
 int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligonos);
-bool VerificaPontoPoligono(float mouseX, float mouseY, Poligono * poligono);
+int VerificaPontoPoligono(Poligonos * poligono,float mouseX, float mouseY,int i);
 void DesenhaPoligono(Poligonos * L_Poligonos);
 
 #endif // POLIGONO_H
