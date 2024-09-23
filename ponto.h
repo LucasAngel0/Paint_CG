@@ -4,6 +4,9 @@
 #define MAXIMO 1000
 
 
+#include "matriz.h"
+
+
 
 typedef struct Cor //estrutura de cor
 {
@@ -35,5 +38,7 @@ int AddPonto(float mouseX, float mouseY, Pontos * L_Pontos);
 int RemovePonto(int chave, Pontos * L_Pontos);
 int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos);
 void DesenhaPonto(Pontos * L_Pontos);
+int TransladaPonto(int key,Pontos *L_Pontos,M3x3 *MTranslacaoPonto);
+
 
 #endif // PONTO_H

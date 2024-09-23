@@ -46,4 +46,7 @@ int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligonos);
 int VerificaPontoPoligono(Poligonos * poligono,float mouseX, float mouseY,int i);
 void DesenhaPoligono(Poligonos * L_Poligonos);
 
+int TransladaPoligono(int key, Poligonos * L_Poligonos, M3x3 *MTranslacaoPoligono);
+
+
 #endif // POLIGONO_H

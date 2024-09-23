@@ -11,9 +11,9 @@ Cor preta = { 0.0, 0.0, 0.0 };
 Retas * CriaL_Retas()
 {
 	// Ponteiro da lista de retas
-	Retas * listaRetas = (Retas *)malloc(sizeof(Retas));
-	listaRetas->QtdRetas = 0;
-	return listaRetas;
+	Retas * L_Retas = (Retas *)malloc(sizeof(Retas));
+	L_Retas->QtdRetas = 0;
+	return L_Retas;
 }
 void ImprimeL_Retas(Retas * L_Retas)
 {
@@ -225,10 +225,10 @@ int Add_Retas(float mouseX, float mouseY, int statusObjeto, Retas * L_Retas)
 }
 
 
-int RemoveReta(int chave, Retas * listaRetas)
+int RemoveReta(int chave, Retas * L_Retas)
 {
 	// Se a lista de retas não foi criada ou a quantidade de retas for zero
-	if (listaRetas == NULL || listaRetas->QtdRetas == 0) {
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
 		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel excluir a reta!\n");
 		return 0;
 	}
@@ -236,12 +236,12 @@ int RemoveReta(int chave, Retas * listaRetas)
 	else {
 		// Laço para percorrer a lista de retas a partir da chave da reta até o final da lista
         // Para não quebrar a integridade da lista
-		for (int i = chave; i < listaRetas->QtdRetas; i++) {
-			listaRetas->retas[i] = listaRetas->retas[i + 1];
+		for (int i = chave; i < L_Retas->QtdRetas; i++) {
+			L_Retas->retas[i] = L_Retas->retas[i + 1];
 		}
 
 		// Diminuir uma unidade da quantidade de retas
-		listaRetas->QtdRetas--;
+		L_Retas->QtdRetas--;
 
 		printf("Reta excluida com sucesso!\n");
 		return 1;
@@ -249,24 +249,24 @@ int RemoveReta(int chave, Retas * listaRetas)
 }
 
 
-int Seleciona_Reta(float mouseX, float mouseY, Retas * listaRetas)
+int Seleciona_Reta(float mouseX, float mouseY, Retas * L_Retas)
 {
     // Se a lista de retas estiver vazia ou a quantidade de retas for zero
-	if (listaRetas == NULL || listaRetas->QtdRetas == 0) {
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
 		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel selecionar a reta!\n");
 		return 0;
 	}
 	// Selecionar reta
 	else {
-		for (int i = 0; i < listaRetas->QtdRetas; i++) {
+		for (int i = 0; i < L_Retas->QtdRetas; i++) {
 			// Calcular formula da reta para saber se um ponto pertence a ela
 			// Pegando o ponto inicial da reta
-			float x1 = listaRetas->retas[i].inicial.x;
-			float y1 = listaRetas->retas[i].inicial.y;
+			float x1 = L_Retas->retas[i].inicial.x;
+			float y1 = L_Retas->retas[i].inicial.y;
 
 			// Pegando o ponto final da reta
-			float x2 = listaRetas->retas[i].final.x;
-			float y2 = listaRetas->retas[i].final.y;
+			float x2 = L_Retas->retas[i].final.x;
+			float y2 = L_Retas->retas[i].final.y;
 
 			// Verificando se o ponto do mouse quando clicado pertence a reta
 			if (VerificaPontoReta(mouseX, mouseY, x1, y1, x2, y2)) {
@@ -308,22 +308,58 @@ int VerificaPontoReta(float mouseX, float mouseY, float x1, float y1, float x2, 
 	}
 }
 
-void desenharRetas(Retas * listaRetas)
+void desenharRetas(Retas * L_Retas)
 {
     glLineWidth(6.0);
     glBegin(GL_LINES);
 
-    for (int i = 0; i < listaRetas->QtdRetas; i++) {
+    for (int i = 0; i < L_Retas->QtdRetas; i++) {
     	// Imprimindo os valores e intensidades de cores RGB
-	glColor3f(listaRetas->retas[i].inicial.cor.Red, listaRetas->retas[i].inicial.cor.Green, listaRetas->retas[i].inicial.cor.Blue);
+	glColor3f(L_Retas->retas[i].inicial.cor.Red, L_Retas->retas[i].inicial.cor.Green, L_Retas->retas[i].inicial.cor.Blue);
 	// Posicionando o ponto inicial na largura e altura corretas do mouse
-	glVertex2f(listaRetas->retas[i].inicial.x, listaRetas->retas[i].inicial.y);
+	glVertex2f(L_Retas->retas[i].inicial.x, L_Retas->retas[i].inicial.y);
 
 	// Imprimindo os valores e intensidades de cores RGB
-	glColor3f(listaRetas->retas[i].final.cor.Red, listaRetas->retas[i].final.cor.Green, listaRetas->retas[i].final.cor.Blue);
+	glColor3f(L_Retas->retas[i].final.cor.Red, L_Retas->retas[i].final.cor.Green, L_Retas->retas[i].final.cor.Blue);
 	// Posicionando o ponto final na largura e altura corretas do mouse
-	glVertex2f(listaRetas->retas[i].final.x, listaRetas->retas[i].final.y);
+	glVertex2f(L_Retas->retas[i].final.x, L_Retas->retas[i].final.y);
     }
 
     glEnd();
+}
+
+int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta){
+
+    // Se a lista de retas estiver vazia ou a quantidade de retas for zero
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
+		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel transladar a reta!\n");
+		return 0;
+	}
+	// Transladar reta
+	else {
+		// Criar matrizes de ponto para auxiliar nos cálculos
+        // Primeiramente, as matrizes contêm as coordenadas originais dos pontos da reta
+		M3x1 * MCompostaInicial = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
+		M3x1 * MCompostaCentral = criaM3x1(L_Retas->retas[key].central.x, L_Retas->retas[key].central.y);
+		M3x1 * MCompostaFinal = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+
+		// Realizar a multiplicação transformação de cada um dos pontos inicial, central e final
+		MCompostaInicial = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaInicial);
+		MCompostaCentral = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaCentral);
+		MCompostaFinal = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaFinal);
+
+		// Atualizar a posição do ponto inicial a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].inicial.x = MCompostaInicial->matriz[0][0];
+		L_Retas->retas[key].inicial.y = MCompostaInicial->matriz[0][1];
+
+		// Atualizar a posição do ponto central a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].central.x = MCompostaCentral->matriz[0][0];
+		L_Retas->retas[key].central.y = MCompostaCentral->matriz[0][1];
+
+		// Atualizar a posição do ponto final a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].final.x = MCompostaFinal->matriz[0][0];
+		L_Retas->retas[key].final.y = MCompostaFinal->matriz[0][1];
+
+		return 1;
+	}
 }

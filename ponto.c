@@ -4,6 +4,8 @@
 
 #include "ponto.h"
 
+#include "matriz.h"
+
 Cor vermelha = { 1.0, 0.0, 0.0 };
 
 Pontos * CriaL_Pontos()
@@ -220,3 +222,24 @@ void DesenhaPonto(Pontos * listaPontos)
 
     glEnd();
 }
+int TransladaPonto(int key,Pontos *L_Pontos,M3x3 * MTranslacaoPonto){
+    if (L_Pontos == NULL || L_Pontos->QtdPontos == 0) {
+        printf("Lista de pontos nao foi criada ou nao ha pontos! Nao e possivel transladar o ponto!\n");
+        return 0;
+    }
+        else {
+        // Criar a matriz3Por1 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm as coordenadas originais do ponto
+        M3x1 * MCompostaPonto = criaM3x1(L_Pontos->pontos[key].x, L_Pontos->pontos[key].y);
+
+        // Realizar a multiplicação gerando a matriz composta
+        MCompostaPonto = MultiplicaM3x3PorM3x1(MTranslacaoPonto, MCompostaPonto);
+
+        // Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+        L_Pontos->pontos[key].x = MCompostaPonto->matriz[0][0];
+        L_Pontos->pontos[key].y = MCompostaPonto->matriz[0][1];  
+
+        return 1;
+    }
+}
+

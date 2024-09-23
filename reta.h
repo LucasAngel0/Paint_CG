@@ -25,9 +25,12 @@ void SalvaL_Retas(const char * ArquivoRetas, Retas * L_Retas);
 void CarregaL_Retas(const char * ArquivoRetas, Retas * L_RetasArquivo);
 
 int Add_Retas(float mouseX, float mouseY, int statusObjeto, Retas * L_Retas);
-int RemoveReta(int chave, Retas * L_Retas);
+int RemoveReta(int key, Retas * L_Retas);
 int Seleciona_Reta(float mouseX, float mouseY, Retas * L_Retas);
 int VerificaPontoReta(float mouseX, float mouseY, float x1, float y1, float x2, float y2);
 void desenharRetas(Retas * L_Retas);
+
+int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta);
+
 
 #endif // RETA_H

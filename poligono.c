@@ -501,3 +501,42 @@ void DesenhaPoligono(Poligonos * L_Poligono)
 		glEnd();
     }
 }
+
+int TransladaPoligono(int key, Poligonos * L_Poligonos, M3x3 *MTranslacaoPoligono){
+
+	    // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
+	if (L_Poligonos == NULL || L_Poligonos->qtdPoligonos == 0) {
+		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel transladar o poligono!\n");
+		return 0;
+	}
+	// Transladar um polígono
+	else {
+		// Variável para a lista de polígonos auxiliando a manipulação de dados
+		PontoPoligono * atualPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+
+		// Recebendo os dados do ponto inicial do polígono
+		atualPontoPoligono = L_Poligonos->poligonos[key].inicial;
+
+		// Laço para percorrer toda a lista de pontos do polígono
+		while (atualPontoPoligono != NULL) {
+			// Criar matriz de ponto para auxiliar nos cálculos
+       		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
+			M3x1 * MPontoPoligono = criaM3x1(atualPontoPoligono->ponto.x, atualPontoPoligono->ponto.y);
+
+			// Realizar a multiplicação para a transformação
+			MPontoPoligono = MultiplicaM3x3PorM3x1(MTranslacaoPoligono, MPontoPoligono);
+
+			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+			atualPontoPoligono->ponto.x = MPontoPoligono->matriz[0][0];
+			atualPontoPoligono->ponto.y = MPontoPoligono->matriz[0][1];
+
+			// Iteração para o próximo ponto da lista
+			atualPontoPoligono = atualPontoPoligono->prox;
+		}
+
+		// Calcular o centróide do novo lugar para o polígono
+		CentroidePoligono(key, L_Poligonos);
+
+		return 1;
+	}
+}

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
+#include "matriz.h"
 #include "poligono.h"
 
 // Variaveis de Tela
@@ -301,6 +302,51 @@ void Teclado(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
+void Movimentacao(int x,int y){
+
+     float translacaoX, translacaoY;
+
+    // Localização atualizada do mouse
+    mouseX = x - largura;  // Localização do eixo x (horizontal - largura)
+    mouseY = altura - y;   // Localização do eixo y (vertical - altura)
+    if (menu == 4 && key != -1) {
+        // Realizar o cálculo para saber o valor da translação realizada
+        translacaoX = mouseX - L_Pontos->pontos[key].x;
+        translacaoY = mouseY - L_Pontos->pontos[key].y;
+
+        // Criar a matriz da translação realizada
+        M3x3 * MTranslacaoPonto = criaMTranslacao(translacaoX, translacaoY);
+
+        // Realizar a translação do ponto selecionado
+       TransladaPonto(key, L_Pontos, MTranslacaoPonto);
+    }
+    else if (menu == 5 && key != -1) {
+        // Realizar o cálculo para saber o valor da translação realizada
+        translacaoX = mouseX - L_Retas->retas[key].central.x;
+        translacaoY = mouseY - L_Retas->retas[key].central.y;
+
+        // Criar a matriz da translação realizada
+        M3x3 * MTranslacaoReta = criaMTranslacao(translacaoX, translacaoY);
+
+        // Realizar a translação da reta selecionada
+        transladarReta(key, L_Retas, MTranslacaoReta);
+    }
+    else if(menu == 6 && key != -1) {
+        // Realizar o cálculo para saber o valor da translação realizada
+        translacaoX = mouseX - L_Poligonos->poligonos[key].centroide.x;
+        translacaoY = mouseY - L_Poligonos->poligonos[key].centroide.y;
+
+        // Criar a matriz da translação realizada
+        M3x3 * mMTranslacaoPoligono = criaMTranslacao(translacaoX, translacaoY);
+
+        // Realizar a translação do polígono selecionado
+        TransladaPoligono(key, L_Poligonos, mMTranslacaoPoligono);
+    }
+
+    glutPostRedisplay();
+}
+
+
 
 //INICIAR O SISTEMA
 int main (int argc, char ** argv)
@@ -328,6 +374,7 @@ int main (int argc, char ** argv)
     glutMouseFunc(funcoesMouse);         // Chamadas quando um botão do mouse é acionado
     glutDisplayFunc(telaInicial);        // Para mostrar elementos na tela rederizando os objetos
     glutKeyboardFunc(Teclado); 
+    glutMotionFunc(Movimentacao);
     glutMainLoop();
 
     return 0;
