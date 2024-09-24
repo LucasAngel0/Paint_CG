@@ -40,13 +40,17 @@ PontoPoligono * BuscaUltimoPonto(PontoPoligono * pontoPoligonoInicial);
 
 int AddPoligono(float mouseX, float mouseY, int statusObjeto, Poligonos * L_Poligonos);
 void FinalizaPoligono(int statusObjeto, Poligonos * L_Poligonos);
-void CentroidePoligono(int chave, Poligonos * L_Poligonos);
-int RemovePoligono(int chave, Poligonos * L_Poligonos);
+void CentroidePoligono(int key, Poligonos * L_Poligonos);
+int RemovePoligono(int key, Poligonos * L_Poligonos);
 int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligonos);
 int VerificaPontoPoligono(Poligonos * poligono,float mouseX, float mouseY,int i);
 void DesenhaPoligono(Poligonos * L_Poligonos);
 
 int TransladaPoligono(int key, Poligonos * L_Poligonos, M3x3 *MTranslacaoPoligono);
+int EscalaPoligono(int key, Poligonos * L_Poligonos, M3x3 * MEscalarPoligono);
+int RotacionaPoligono(int key, Poligonos * L_Poligonos, M3x3 * MRotacaoPoligono);
+int RefletePoligono(int key, Poligonos * L_Poligonos, M3x3 * MReflexaoPoligono);
+int CisalhaPoligono(int key, Poligonos * L_Poligonos, M3x3 * MCisalharPoligono);
 
 
 #endif // POLIGONO_H

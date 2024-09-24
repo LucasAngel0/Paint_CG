@@ -49,7 +49,7 @@ void SalvaPoligonos(const char * nomeArquivoPoligonos, Poligonos * L_Poligono)
 	// Se a lista de polígonos não está vazia
 	if (L_Poligono != NULL) {
 		// Variável para iterar a lista de polígonos
-		PontoPoligono * atualPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+		PontoPoligono * PontoAtual_Poligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
 		
 		// Abrir o arquivo para salvar a lista
 		FILE * arquivoPoligonos = fopen(nomeArquivoPoligonos, "w");
@@ -73,18 +73,18 @@ void SalvaPoligonos(const char * nomeArquivoPoligonos, Poligonos * L_Poligono)
 			fprintf(arquivoPoligonos, "%d\n", L_Poligono->poligonos[i].qtdLados);
 
 			// Inicializando a variável com o primeiro ponto
-			atualPontoPoligono = L_Poligono->poligonos[i].inicial;
+			PontoAtual_Poligono = L_Poligono->poligonos[i].inicial;
 
 			// Laço para iterar os pontos do polígono
-			while (atualPontoPoligono != NULL) {
+			while (PontoAtual_Poligono != NULL) {
 				////////// Ponto atual
 				// Salvar posições do ponto atual
-				fprintf(arquivoPoligonos, "%.1f ", atualPontoPoligono->ponto.x);
-				fprintf(arquivoPoligonos, "%.1f", atualPontoPoligono->ponto.y);
+				fprintf(arquivoPoligonos, "%.1f ", PontoAtual_Poligono->ponto.x);
+				fprintf(arquivoPoligonos, "%.1f", PontoAtual_Poligono->ponto.y);
 				fprintf(arquivoPoligonos, "\n"); // Mover para a próxima linha do arquivo
 
 				// Mover para o próximo ponto
-				atualPontoPoligono = atualPontoPoligono->prox;
+				PontoAtual_Poligono = PontoAtual_Poligono->prox;
 			}
 
 			////////// Ponto centroide
@@ -315,7 +315,7 @@ void FinalizaPoligono(int statusObjeto, Poligonos * L_Poligono)
 /*
  * FUNÇÃO PARA CALCULAR O CENTRÓIDE DO POLÍGONO
  */
-void CentroidePoligono(int chave, Poligonos * L_Poligono)
+void CentroidePoligono(int key, Poligonos * L_Poligono)
 {
 	float centroideX = 0.0, centroideY = 0.0, areaPoligono = 0.0, auxPoligono = 0.0;
 
@@ -324,11 +324,11 @@ void CentroidePoligono(int chave, Poligonos * L_Poligono)
 	PontoPoligono * finalPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
 
 	// Inicializando as variáveis com o primeiro ponto e com o próximo ponto, respectivamente inicialPontoPoligono e finalPontoPoligono
-	inicialPontoPoligono = L_Poligono->poligonos[chave].inicial;
-	finalPontoPoligono = L_Poligono->poligonos[chave].inicial->prox;
+	inicialPontoPoligono = L_Poligono->poligonos[key].inicial;
+	finalPontoPoligono = L_Poligono->poligonos[key].inicial->prox;
 
 	// Se a quantidade de lados do polígono for 3
-	if (L_Poligono->poligonos[chave].qtdLados == 3) {
+	if (L_Poligono->poligonos[key].qtdLados == 3) {
 		printf("entrou\n");
 		// Laço para percorrer toda a lista de pontos do polígono
 		// Utilizando também a fórmula do cálculo do centróide de um triângulo
@@ -344,11 +344,11 @@ void CentroidePoligono(int chave, Poligonos * L_Poligono)
 		}
 
 		// Atribuindo o valor do cálculo do centróide a variável referente a ele na lista de polígonos
-		L_Poligono->poligonos[chave].centroide.x = centroideX / 3;
-		L_Poligono->poligonos[chave].centroide.y = centroideY / 3;
+		L_Poligono->poligonos[key].centroide.x = centroideX / 3;
+		L_Poligono->poligonos[key].centroide.y = centroideY / 3;
 	}
 	// Se a quantidade de lados do polígono for 4 ou mais
-	else if (L_Poligono->poligonos[chave].qtdLados >= 4) {
+	else if (L_Poligono->poligonos[key].qtdLados >= 4) {
 		// Laço para percorrer toda a lista de pontos do polígono
 		// Utilizando o finalPontoPoligono como condição de parada (já que ele está mais a frente na iteração)
 		// Utilizando também a fórmula do cálculo do centróide de um polígono
@@ -373,7 +373,7 @@ void CentroidePoligono(int chave, Poligonos * L_Poligono)
 
 		// Atribuindo a variável finalPontoPoligono com o último ponto que está na inicialPontoPoligono
 		finalPontoPoligono = inicialPontoPoligono;
-		inicialPontoPoligono = L_Poligono->poligonos[chave].inicial;
+		inicialPontoPoligono = L_Poligono->poligonos[key].inicial;
 
 		// Atribuindo o valor para finalizar a soma do cálculo da área do polígono
 		auxPoligono = (finalPontoPoligono->ponto.x * inicialPontoPoligono->ponto.y) - (inicialPontoPoligono->ponto.x * finalPontoPoligono->ponto.y);
@@ -385,20 +385,20 @@ void CentroidePoligono(int chave, Poligonos * L_Poligono)
 		centroideY += (inicialPontoPoligono->ponto.y + finalPontoPoligono->ponto.y) * auxPoligono;
 
 		// Atribuindo o valor do cálculo do centróide a variável referente a ele na lista de polígonos
-		L_Poligono->poligonos[chave].centroide.x = centroideX / (6 * areaPoligono);
-		L_Poligono->poligonos[chave].centroide.y = centroideY / (6 * areaPoligono);
+		L_Poligono->poligonos[key].centroide.x = centroideX / (6 * areaPoligono);
+		L_Poligono->poligonos[key].centroide.y = centroideY / (6 * areaPoligono);
 	}
 
 	// Atribuindo a cor ao centróide
-	L_Poligono->poligonos[chave].centroide.cor = violeta;
+	L_Poligono->poligonos[key].centroide.cor = violeta;
 
-	printf("Centroide: (%.1f, %.1f)\n", L_Poligono->poligonos[chave].centroide.x, L_Poligono->poligonos[chave].centroide.y);
+	printf("Centroide: (%.1f, %.1f)\n", L_Poligono->poligonos[key].centroide.x, L_Poligono->poligonos[key].centroide.y);
 }
 
 /*
  * FUNÇÃO PARA EXCLUIR UM POLÍGONO DA TELA
  */
-int RemovePoligono(int chave, Poligonos * L_Poligono)
+int RemovePoligono(int key, Poligonos * L_Poligono)
 {
 	// Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
 	if (L_Poligono == NULL || L_Poligono->qtdPoligonos == 0) {
@@ -407,9 +407,9 @@ int RemovePoligono(int chave, Poligonos * L_Poligono)
 	}
 	// Remover um polígono
 	else {
-		// Laço para percorrer a lista de polígonos a partir da chave do polígono até o final da lista
+		// Laço para percorrer a lista de polígonos a partir da key do polígono até o final da lista
         // Para não quebrar a integridade da lista
-		for (int i = chave; i < L_Poligono->qtdPoligonos; i++) {
+		for (int i = key; i < L_Poligono->qtdPoligonos; i++) {
 			L_Poligono->poligonos[i] = L_Poligono->poligonos[i + 1];
 		}
 
@@ -512,26 +512,26 @@ int TransladaPoligono(int key, Poligonos * L_Poligonos, M3x3 *MTranslacaoPoligon
 	// Transladar um polígono
 	else {
 		// Variável para a lista de polígonos auxiliando a manipulação de dados
-		PontoPoligono * atualPontoPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+		PontoPoligono * PontoAtual_Poligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
 
 		// Recebendo os dados do ponto inicial do polígono
-		atualPontoPoligono = L_Poligonos->poligonos[key].inicial;
+		PontoAtual_Poligono = L_Poligonos->poligonos[key].inicial;
 
 		// Laço para percorrer toda a lista de pontos do polígono
-		while (atualPontoPoligono != NULL) {
+		while (PontoAtual_Poligono != NULL) {
 			// Criar matriz de ponto para auxiliar nos cálculos
        		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
-			M3x1 * MPontoPoligono = criaM3x1(atualPontoPoligono->ponto.x, atualPontoPoligono->ponto.y);
+			M3x1 * MPontoPoligono = criaM3x1(PontoAtual_Poligono->ponto.x, PontoAtual_Poligono->ponto.y);
 
 			// Realizar a multiplicação para a transformação
 			MPontoPoligono = MultiplicaM3x3PorM3x1(MTranslacaoPoligono, MPontoPoligono);
 
 			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
-			atualPontoPoligono->ponto.x = MPontoPoligono->matriz[0][0];
-			atualPontoPoligono->ponto.y = MPontoPoligono->matriz[0][1];
+			PontoAtual_Poligono->ponto.x = MPontoPoligono->matriz[0][0];
+			PontoAtual_Poligono->ponto.y = MPontoPoligono->matriz[0][1];
 
 			// Iteração para o próximo ponto da lista
-			atualPontoPoligono = atualPontoPoligono->prox;
+			PontoAtual_Poligono = PontoAtual_Poligono->prox;
 		}
 
 		// Calcular o centróide do novo lugar para o polígono
@@ -539,4 +539,183 @@ int TransladaPoligono(int key, Poligonos * L_Poligonos, M3x3 *MTranslacaoPoligon
 
 		return 1;
 	}
+}
+
+int EscalaPoligono(int key, Poligonos * L_Poligonos, M3x3 * MEscalarPoligono){
+	 // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
+	if (L_Poligonos == NULL || L_Poligonos->qtdPoligonos == 0) {
+		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel rotacionar o poligono!\n");
+		return 0;
+	}
+	// Escalar um polígono
+	else {
+		// Criar a matriz3Por3 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm o resultado das multiplicações necessárias para a rotação
+        M3x3 * matrizCompostaPoligono = MultiplicaMComposta(
+			L_Poligonos->poligonos[key].centroide.x, 
+			L_Poligonos->poligonos[key].centroide.y, 
+			MEscalarPoligono
+        );
+
+        // Variável para a lista de polígonos auxiliando a manipulação de dados
+		PontoPoligono * PontoAtual_Poligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+
+		// Recebendo os dados do ponto inicial do polígono
+		PontoAtual_Poligono = L_Poligonos->poligonos[key].inicial;
+
+		// Laço para percorrer toda a lista de pontos do polígono
+		while (PontoAtual_Poligono != NULL) {
+			// Criar matriz de ponto para auxiliar nos cálculos
+       		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
+			M3x1 * MPontoPoligono = criaM3x1(PontoAtual_Poligono->ponto.x, PontoAtual_Poligono->ponto.y);
+
+			// Realizar a multiplicação para a transformação
+			MPontoPoligono = MultiplicaM3x3PorM3x1(matrizCompostaPoligono, MPontoPoligono);
+
+			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+			PontoAtual_Poligono->ponto.x = MPontoPoligono->matriz[0][0];
+			PontoAtual_Poligono->ponto.y = MPontoPoligono->matriz[0][1];
+
+			// Iteração para o próximo ponto da lista
+			PontoAtual_Poligono = PontoAtual_Poligono->prox;
+		}
+
+		// Calcular o centróide do novo lugar para o polígono
+		CentroidePoligono(key, L_Poligonos);
+		
+		return 1;
+	}
+
+}
+
+int RotacionaPoligono(int key, Poligonos * L_Poligonos, M3x3 * MRotacaoPoligono){
+	 // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
+	if (L_Poligonos == NULL || L_Poligonos->qtdPoligonos == 0) {
+		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel rotacionar o poligono!\n");
+		return 0;
+	}
+	// Escalar um polígono
+	else {
+		// Criar a matriz3Por3 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm o resultado das multiplicações necessárias para a rotação
+        M3x3 * matrizCompostaPoligono = MultiplicaMComposta(
+			L_Poligonos->poligonos[key].centroide.x, 
+			L_Poligonos->poligonos[key].centroide.y, 
+			MRotacaoPoligono
+        );
+
+        // Variável para a lista de polígonos auxiliando a manipulação de dados
+		PontoPoligono * PontoAtual_Poligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+
+		// Recebendo os dados do ponto inicial do polígono
+		PontoAtual_Poligono = L_Poligonos->poligonos[key].inicial;
+
+		// Laço para percorrer toda a lista de pontos do polígono
+		while (PontoAtual_Poligono != NULL) {
+			// Criar matriz de ponto para auxiliar nos cálculos
+       		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
+			M3x1 * MPontoPoligono = criaM3x1(PontoAtual_Poligono->ponto.x, PontoAtual_Poligono->ponto.y);
+
+			// Realizar a multiplicação para a transformação
+			MPontoPoligono = MultiplicaM3x3PorM3x1(matrizCompostaPoligono, MPontoPoligono);
+
+			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+			PontoAtual_Poligono->ponto.x = MPontoPoligono->matriz[0][0];
+			PontoAtual_Poligono->ponto.y = MPontoPoligono->matriz[0][1];
+
+			// Iteração para o próximo ponto da lista
+			PontoAtual_Poligono = PontoAtual_Poligono->prox;
+		}
+
+		// Calcular o centróide do novo lugar para o polígono
+		CentroidePoligono(key, L_Poligonos);
+		
+		return 1;
+	}
+}
+
+int RefletePoligono(int key, Poligonos * L_Poligonos, M3x3 * MReflexaoPoligono){
+
+	 // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
+	if (L_Poligonos == NULL || L_Poligonos->qtdPoligonos == 0) {
+		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel refletir o poligono!\n");
+		return 0;
+	}
+	// Refletir um polígono
+	else {
+		// Variável para a lista de polígonos auxiliando a manipulação de dados
+		PontoPoligono * PontoAtual_Poligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+
+		// Recebendo os dados do ponto inicial do polígono
+		PontoAtual_Poligono = L_Poligonos->poligonos[key].inicial;
+
+		// Laço para percorrer toda a lista de pontos do polígono
+		while (PontoAtual_Poligono != NULL) {
+			// Criar matriz de ponto para auxiliar nos cálculos
+       		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
+			M3x1 * MPontoPoligono = criaM3x1(PontoAtual_Poligono->ponto.x, PontoAtual_Poligono->ponto.y);
+
+			// Realizar a multiplicação para a transformação
+			MPontoPoligono = MultiplicaM3x3PorM3x1(MReflexaoPoligono, MPontoPoligono);
+
+			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+			PontoAtual_Poligono->ponto.x = MPontoPoligono->matriz[0][0];
+			PontoAtual_Poligono->ponto.y = MPontoPoligono->matriz[0][1];
+
+			// Iteração para o próximo ponto da lista
+			PontoAtual_Poligono = PontoAtual_Poligono->prox;
+		}
+
+		// Calcular o centróide do novo lugar para o polígono
+		CentroidePoligono(key, L_Poligonos);
+
+		return 1;
+	}
+}
+int CisalhaPoligono(int key, Poligonos * L_Poligono, M3x3 * MCisalharPoligono){
+	 // Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
+	if (L_Poligono == NULL || L_Poligono->qtdPoligonos == 0) {
+		printf("Lista de poligonos nao foi criada ou nao ha poligonos! Nao e possivel cisalhar o poligono!\n");
+		return 0;
+	}
+	// Cisalhar um polígono
+	else {
+		// Criar a matriz3Por3 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm o resultado das multiplicações necessárias para a rotação
+        M3x3 * matrizCompostaPoligono = MultiplicaMComposta(
+			L_Poligono->poligonos[key].centroide.x, 
+			L_Poligono->poligonos[key].centroide.y, 
+			MCisalharPoligono
+        );
+
+        // Variável para a lista de polígonos auxiliando a manipulação de dados
+		PontoPoligono * PontoAtualPoligono = (PontoPoligono *)malloc(sizeof(PontoPoligono));
+
+		// Recebendo os dados do ponto inicial do polígono
+		PontoAtualPoligono = L_Poligono->poligonos[key].inicial;
+
+		// Laço para percorrer toda a lista de pontos do polígono
+		while (PontoAtualPoligono != NULL) {
+			// Criar matriz de ponto para auxiliar nos cálculos
+       		// Primeiramente, a matriz contêm as coordenadas originais do ponto atual
+			M3x1 * matrizPontoPoligono = criaM3x1(PontoAtualPoligono->ponto.x, PontoAtualPoligono->ponto.y);
+
+			// Realizar a multiplicação para a transformação
+			matrizPontoPoligono = MultiplicaM3x3PorM3x1(matrizCompostaPoligono, matrizPontoPoligono);
+
+			// Atualizar a posição do ponto a partir do resultado do cálculo da transformação
+			PontoAtualPoligono->ponto.x = matrizPontoPoligono->matriz[0][0];
+			PontoAtualPoligono->ponto.y = matrizPontoPoligono->matriz[0][1];
+
+			// Iteração para o próximo ponto da lista
+			PontoAtualPoligono = PontoAtualPoligono->prox;
+		}
+
+		// Calcular o centróide do novo lugar para o polígono
+		CentroidePoligono(key, L_Poligono);
+
+		return 1;
+	}
+
+
 }
