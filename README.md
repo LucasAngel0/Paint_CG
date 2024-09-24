@@ -1,19 +1,54 @@
-### Instruções para execução do projeto
+# Construção do Paint ultilizando OpenGL e Glut para a cadeira de Computação Gráfica
 
+Este projeto é um programa em C que permite a criação, manipulação e visualização de objetos geométricos, incluindo pontos, segmentos de reta e polígonos, utilizando a biblioteca OpenGL e GLUT para renderização gráfica.
 
-Para a utilização do WSL, podesse compilar o projeto utilizando o comando:
+## Funcionalidades
+  - Criar Objetos: Permite criar pontos, segmentos de reta e polígonos na tela utilizando o mouse.
+  - Selecionar Objetos: Seleciona objetos criados para manipulação.
+  - Salvar e Carregar Objetos: Os objetos podem ser salvos em arquivos de texto 
+   e carregados posteriormente.
+
+## Manipulação de Objetos:
+  - Escalar objetos (aumentar ou diminuir)
+  - Rotacionar objetos
+  - Deletar objetos
+  - Finalizar a criação de polígonos
+  - Refletir o Objeto em y e em relação a origem.
+  - Cisalhar Poligono
+
+- Criar e manipular pontos, segmentos de reta e polígonos.
+- Salvar e carregar objetos de arquivos.
+- Selecionar objetos com o mouse.
+- Manipulação básica de objetos (exclusão, escalonamento e rotação) através do teclado.
+
+## Instruções para Execução do Projeto
+Este Projeto foi Criado utilizando o Ubuntu 24.02 lts então para iniciar o Projeto, deverá abrir um terminal dentro da pasta do Arquivo e colocar o seguinte comando:
 ```bash
-g++ main.c  ponto.c reta.c poligono.c -o main -lglut -lGLU -lGL
+g++ main.c  ponto.c reta.c poligono.c matriz.c -o main -lglut -lGLU -lGL
 ```
+Para roda o programa basta inicializar o Arquivo Main gerado na pasta do arquivo do Projeto
 
-### Instruções para uso do programa
+## Instrução Para Uso
+### Menu de Contexto
 
-#### 1. Utilização do menu 
+  #### Acesse o menu principal clicando com o botão direito do mouse.
+  - O menu permite criar, selecionar, salvar, carregar objetos e sair do programa.
+  #### Interação com o Mouse
+  - Clique com o botão esquerdo para adicionar ou selecionar objetos.
+   Os objetos são criados ou selecionados dependendo da opção ativa no menu.
 
-É necessário clicar no botão direito do mouse para ativar o menu e escolher uma das opções disponíveis.
-
-#### 2. Criação de pontos, segmentos de reta e polígonos
-
-É necessário escolher a opção 'Criar' > 'Ponto' ou 'Segmento de Reta' ou 'Polígono' para a criação dos objetos. No caso dos pontos, depois de escolhida a opção, basta clicar com o botão esquerdo do mouse no local onde deseja adicionar um ponto e ele aparecerá no local desejado. Já para o segmento de reta, dois cliques no botão esquerdo são necessários, onde a reta deverá iniciar e terminar, respectivamente. Para o polígono, é necessário um clique a mais e depois clicar na tecla 'F' do teclado.
+### Controles 
+Com o objeto selecionado de acordo com o menu de contexto aperte as seguintes teclas(maiusculas ou minusculas)  para executar a funcionalidade requerida 
+- F: Finaliza o desenho do polígono.
+- D: Deleta o objeto selecionado.
+- L: Aumenta o objeto selecionado.(exceto o Ponto)
+- K: Diminui o objeto selecionado para baixo.
+- R: Rotaciona o objeto selecionado em sentido horário.(o Ponto é rotacionado  ao redor da origem)
+- E: Rotaciona o objeto selecionado em sentido horário.(o Ponto é rotacionado  ao redor da origem)
+- M: Reflete o objeto como base na horigem
+- N: Reflete o objeto com base o Eixo Y
+- C: Cisalha o poligono em x
+- X :
+  
 
 
