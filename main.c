@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <unistd.h>
+#include <time.h>
+
 
 #include "matriz.h"
 #include "poligono.h"
@@ -247,6 +249,32 @@ void funcoesMouse(int botaoMouse, int statusMouse, int x, int y)
     glutPostRedisplay();
 }
 
+void Animacao(int value) {
+    static int t = 0; // Contador estático para a animação
+    float angulo=45;
+
+    if (t < 100) {
+        for (int i = 0; i < L_Pontos->QtdPontos; i++) {
+            M3x3 *MRotacao = CriaMRotacaoInversa(angulo);
+            RotacionaPonto(i, L_Pontos, MRotacao);
+        }
+
+        for (int j = 0; j < L_Retas->QtdRetas; j++) {
+            M3x3 *MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
+            RotacionaReta(j, L_Retas, MRotacaoInversaReta);
+        }
+
+        for (int k = 0; k < L_Poligonos->qtdPoligonos; k++) {
+            M3x3 *MRotacao = CriaMRotacaoInversa(angulo);
+            RotacionaPoligono(k, L_Poligonos, MRotacao);
+        }
+
+        t++;
+        glutPostRedisplay(); // Atualiza a tela
+        glutTimerFunc(100, Animacao, 0); // Chama novamente após 100ms
+    }
+}
+
 void Teclado(unsigned char tecla, int x, int y)
 {
     float corte = 0.5;
@@ -360,35 +388,9 @@ void Teclado(unsigned char tecla, int x, int y)
         
     }
      else if(tecla=='A'|| tecla=='a'){
-        int i,j,k,t=0;
-        while(t==0){
-            if(tecla=='P'||tecla=='p'){
-                t=1;
-            }
-            for(i=0;i<L_Pontos->QtdPontos;i++){
-                M3x3 * MRotacao = CriaMRotacaoInversa(angulo);
-                RotacionaPonto(i,L_Pontos,MRotacao);
-            }
-
-            for(j=0;j<L_Retas->QtdRetas;j++){
-                M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
-                RotacionaReta(j, L_Retas, MRotacaoInversaReta);
-            }
-            for(k=0;k<L_Poligonos->qtdPoligonos;k++){
-                M3x3 * MRotacao = CriaMRotacaoInversa(angulo);
-                RotacionaPoligono(k,L_Poligonos,MRotacao);
-            }
-            usleep(1000000);
-
-
-
-
-
-        }
-
-
-
-     
+        Animacao(0);
+        
+        
    }
 
 
@@ -464,6 +466,13 @@ void Teclado(unsigned char tecla, int x, int y)
         key = SelecionaPoligono(mouseX, mouseY, L_Poligonos);
         M3x3 * MCisalhaPoligono=CriaMCisalhamentoX(corte);
         CisalhaPoligono(key, L_Poligonos, MCisalhaPoligono);
+    }
+    else if(tecla=='V' || tecla=='v'){
+        key = SelecionaPoligono(mouseX, mouseY, L_Poligonos);
+        M3x3 * MCisalhaPoligono=CriarMCisalhamentoY(corte);
+        CisalhaPoligono(key, L_Poligonos, MCisalhaPoligono);
+
+
     }
    
 
