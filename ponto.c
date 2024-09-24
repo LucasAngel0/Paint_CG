@@ -147,9 +147,7 @@ int AddPonto(float mouseX, float mouseY, Pontos * L_Pontos)
     }
 }
 
-/*
- * FUNÇÃO PARA EXCLUIR UM PONTO DA TELA
- */
+
 int RemovePonto(int key, Pontos * L_Pontos)
 {
     // Se a lista de pontos não foi criada ou a quantidade de pontos for zero
@@ -173,9 +171,7 @@ int RemovePonto(int key, Pontos * L_Pontos)
     }
 }
 
-/*
- * FUNÇÃO PARA SELECIONAR UM PONTO DA TELA RETORNANDO A CHAVE ONDE O PONTO ESTÁ NA LISTA
- */
+
 int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos)
 {
     int tolerancia = 12; 
@@ -203,9 +199,6 @@ int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos)
     }
 }
 
-/*
- * FUNÇÃO PARA DESENHAR OS PONTOS NA TELA
- */
 void DesenhaPonto(Pontos * L_Pontos)
 {
     glPointSize(6.0);

@@ -224,9 +224,7 @@ void imprimePontos(PontoPoligono * pontoPoligonoInicial)
 	}
 }
 
-/*
- * FUNÇÃO PARA BUSCAR O ÚLTIMO PONTO DO POLÍGONO
- */
+
 PontoPoligono * BuscaUltimoPonto(PontoPoligono * pontoPoligonoInicial)
 {
 	// Checar se a variável para o ponto passada ainda é nula
@@ -244,11 +242,7 @@ PontoPoligono * BuscaUltimoPonto(PontoPoligono * pontoPoligonoInicial)
 	return pontoPoligonoInicial;
 }
 
-///////////////////////////////////////////////////////////////////
 
-/*
- * FUNÇÃO PARA ADICIONAR UM POLÍGONO A TELA
- */
 int AddPoligono(float mouseX, float mouseY, int statusObjeto, Poligonos * L_Poligono)
 {
 	// Se a lista de polígonos não foi criada ou está cheia, não é possível adicionar mais polígonos
@@ -287,9 +281,7 @@ int AddPoligono(float mouseX, float mouseY, int statusObjeto, Poligonos * L_Poli
 	}
 }
 
-/*
- * FUNÇÃO PARA FINALIZAR O POLÍGONO SENDO DESENHADO
- */
+
 void FinalizaPoligono(int statusObjeto, Poligonos * L_Poligono)
 {
 	// Se a lista de polígonos não foi criada ou está cheia, não é possível adicionar mais polígonos
@@ -312,9 +304,6 @@ void FinalizaPoligono(int statusObjeto, Poligonos * L_Poligono)
 	}
 }
 
-/*
- * FUNÇÃO PARA CALCULAR O CENTRÓIDE DO POLÍGONO
- */
 void CentroidePoligono(int key, Poligonos * L_Poligono)
 {
 	float centroideX = 0.0, centroideY = 0.0, areaPoligono = 0.0, auxPoligono = 0.0;
@@ -395,9 +384,7 @@ void CentroidePoligono(int key, Poligonos * L_Poligono)
 	printf("Centroide: (%.1f, %.1f)\n", L_Poligono->poligonos[key].centroide.x, L_Poligono->poligonos[key].centroide.y);
 }
 
-/*
- * FUNÇÃO PARA EXCLUIR UM POLÍGONO DA TELA
- */
+
 int RemovePoligono(int key, Poligonos * L_Poligono)
 {
 	// Se a lista de polígonos não foi criada ou a quantidade de polígonos for zero
@@ -421,9 +408,7 @@ int RemovePoligono(int key, Poligonos * L_Poligono)
 	}
 }
 
-/*
- * FUNÇÃO PARA SELECIONAR UM POLÍGONO DA TELA
- */
+
 int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligono)
 {
     if (L_Poligono == NULL || L_Poligono->qtdPoligonos == 0) {
@@ -440,9 +425,7 @@ int SelecionaPoligono(float mouseX, float mouseY, Poligonos * L_Poligono)
     return -1; // Retorne -1 se nenhum polígono for selecionado
 }
 
-/*
- * FUNÇÃO PARA VERIFICAR SE O PONTO PERTENCE AO POLÍGONO
- */
+
 int VerificaPontoPoligono(Poligonos *L_Poligono, float mouseX, float mouseY, int indice)
 {
     int qtdLados = L_Poligono->poligonos[indice].qtdLados;
@@ -470,9 +453,7 @@ int VerificaPontoPoligono(Poligonos *L_Poligono, float mouseX, float mouseY, int
     return c; // Retorna 1 se o ponto estiver dentro do polígono, 0 caso contrário
 }
 
-/*
- * FUNÇÃO PARA DESENHAR OS POLÍGONOS NA TELA
- */
+
 void DesenhaPoligono(Poligonos * L_Poligono)
 {
 	// Criando uma variável ponto para auxílio na manipulação dos dados

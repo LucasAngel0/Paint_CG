@@ -199,7 +199,7 @@ M3x3 * CriaMReflexaoX()
     return MReflexaoEixoX;
 }
 
-M3x3 * CriaMatrizReflexaoY()
+M3x3 * CriaMReflexaoY()
 {
     M3x3 * MReflexaoEixoY = criaM3x3();
 

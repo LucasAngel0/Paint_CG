@@ -32,7 +32,7 @@ M3x3 * CriaMRotacaoInversa(float angulo);
 M3x3 * CriaMEscalarInversa(float escala);
 
 M3x3 * CriaMReflexaoX();
-M3x3 * CriaMatrizReflexaoY();
+M3x3 * CriaMReflexaoY();
 M3x3 * CriaMReflexaoOrigem();
 
 M3x3 * CriaMCisalhamentoX(float corte);

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <unistd.h>
 
 #include "matriz.h"
 #include "poligono.h"
@@ -250,7 +251,8 @@ void Teclado(unsigned char tecla, int x, int y)
 {
     float corte = 0.5;
     float angulo = 45.0;
-    float escala = 1.1;
+    float escalaMaior = 1.1;
+    float escalaMenor=0.9;
 
     // Localização atualizada do mouse
     mouseX = x - largura;  // Localização do eixo x (horizontal - largura)
@@ -302,20 +304,36 @@ void Teclado(unsigned char tecla, int x, int y)
         if (menu == 5 && key != -1) {
                 key = Seleciona_Reta(mouseX, mouseY, L_Retas);
                 // Criar a matriz da escalar realizada para aumentar a reta
-                M3x3 * MEscarlarMaior = CriaMEscalar(escala);
+                M3x3 * MEscarlarMaior = CriaMEscalar(escalaMaior);
 
-                // Realizar o aumento da escala da reta selecionada
+                // Realizar o aumento da escalaMaior da reta selecionada
                 EscalarReta(key, L_Retas, MEscarlarMaior);
        }
        else if (menu == 6 && key != -1){
             key=SelecionaPoligono(mouseX,mouseY,L_Poligonos);
-            M3x3 * MEscalaMaior=CriaMEscalar(escala);
+            M3x3 * MEscalaMaior=CriaMEscalar(escalaMaior);
             EscalaPoligono(key,L_Poligonos,MEscalaMaior);
 
 
        }
         
     }
+    else if (tecla == 'K'|| tecla == 'k' ) {
+        if (menu == 5 && key != -1) {
+                key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+                M3x3 * MEscalaMenor = CriaMEscalar(escalaMenor);
+                EscalarReta(key, L_Retas, MEscalaMenor);
+       }
+       else if (menu == 6 && key != -1){
+            key=SelecionaPoligono(mouseX,mouseY,L_Poligonos);
+            M3x3 * MEscalaMenor=CriaMEscalar(escalaMenor);
+            EscalaPoligono(key,L_Poligonos,MEscalaMenor);
+
+
+       }
+        
+    }
+
     else if (tecla == 'R'|| tecla == 'r' ) {
         if (menu == 5 && key != -1) {
             key = Seleciona_Reta(mouseX, mouseY, L_Retas);
@@ -341,6 +359,65 @@ void Teclado(unsigned char tecla, int x, int y)
           
         
     }
+     else if(tecla=='A'|| tecla=='a'){
+        int i,j,k,t=0;
+        while(t==0){
+            if(tecla=='P'||tecla=='p'){
+                t=1;
+            }
+            for(i=0;i<L_Pontos->QtdPontos;i++){
+                M3x3 * MRotacao = CriaMRotacaoInversa(angulo);
+                RotacionaPonto(i,L_Pontos,MRotacao);
+            }
+
+            for(j=0;j<L_Retas->QtdRetas;j++){
+                M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
+                RotacionaReta(j, L_Retas, MRotacaoInversaReta);
+            }
+            for(k=0;k<L_Poligonos->qtdPoligonos;k++){
+                M3x3 * MRotacao = CriaMRotacaoInversa(angulo);
+                RotacionaPoligono(k,L_Poligonos,MRotacao);
+            }
+            usleep(1000000);
+
+
+
+
+
+        }
+
+
+
+     
+   }
+
+
+    else if (tecla == 'E'|| tecla == 'e' ) {
+        if (menu == 5 && key != -1) {
+            key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+            M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(-angulo);
+            RotacionaReta(key, L_Retas, MRotacaoInversaReta);
+        }
+        
+        
+        else if(menu==4|| key!=-1){
+            key = SelecionaPonto(mouseX, mouseY, L_Pontos);
+            M3x3 * MRotacao = CriaMRotacaoInversa(-angulo);
+            RotacionaPonto(key,L_Pontos,MRotacao);
+
+
+        }
+        else if(menu==6|| key!=-1){
+            key = SelecionaPoligono(mouseX, mouseY, L_Poligonos);
+            M3x3 * MRotacao = CriaMRotacaoInversa(-angulo);
+            RotacionaPoligono(key,L_Poligonos,MRotacao);
+
+
+        }
+          
+        
+    }
+        
     else if(tecla=='M'|| tecla=='m'){
         if (menu == 4 && key != -1) {
             key = SelecionaPonto(mouseX, mouseY, L_Pontos);
@@ -362,12 +439,33 @@ void Teclado(unsigned char tecla, int x, int y)
 
 
     }
+    else if(tecla=='N'|| tecla=='n'){
+        if (menu == 4 && key != -1) {
+            key = SelecionaPonto(mouseX, mouseY, L_Pontos);
+            M3x3 * MReflexaoPonto = CriaMReflexaoY();
+            RefletePonto(key, L_Pontos, MReflexaoPonto);
+        }
+        else if(menu==5 && key !=-1){
+            key= Seleciona_Reta(mouseX,mouseY,L_Retas);
+            M3x3 * MReflexaoReta = CriaMReflexaoY();
+            RefleteReta(key, L_Retas, MReflexaoReta);
+
+        }
+        else if(menu==6 && key !=-1){
+            key = SelecionaPoligono(mouseX, mouseY, L_Poligonos);
+            M3x3 * MReflexaoPoligono = CriaMReflexaoY();
+            RefletePoligono(key,L_Poligonos,MReflexaoPoligono);
+
+        }
+
+
+    }
     else if(tecla=='C'|| tecla=='c'){
         key = SelecionaPoligono(mouseX, mouseY, L_Poligonos);
         M3x3 * MCisalhaPoligono=CriaMCisalhamentoX(corte);
         CisalhaPoligono(key, L_Poligonos, MCisalhaPoligono);
     }
-
+   
 
 
     glutPostRedisplay();
