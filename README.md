@@ -49,6 +49,7 @@ Com o objeto selecionado de acordo com o menu de contexto aperte as seguintes te
 - N: Reflete o objeto com base o Eixo Y
 - C: Cisalha o poligono em x
 - V: Cisalha o poligono em Y
+- A: Realiza uma animação com os objetos
   
   
 
