@@ -48,7 +48,8 @@ Com o objeto selecionado de acordo com o menu de contexto aperte as seguintes te
 - M: Reflete o objeto como base na horigem
 - N: Reflete o objeto com base o Eixo Y
 - C: Cisalha o poligono em x
-- X :
+- V: Cisalha o poligono em Y
+  
   
 
 
