@@ -250,7 +250,7 @@ void Teclado(unsigned char key, int x, int y)
 {
     float corte = 0.5;
     float angulo = 45.0;
-    float escala = 1.05;
+    float escala = 1.1;
 
     // Localização atualizada do mouse
     mouseX = x - largura;  // Localização do eixo x (horizontal - largura)
@@ -297,6 +297,31 @@ void Teclado(unsigned char key, int x, int y)
             // Mudar status do objeto para ele ser finalizado
             EstadoDoObjeto = -1;
         }
+    }
+    else if (key == 'L'|| key == 'l' ) {
+        if (menu == 5 && key != -1) {
+                key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+                // Criar a matriz da escalar realizada para aumentar a reta
+                M3x3 * MEscarlarMaior = CriaMEscalar(escala);
+
+                // Realizar o aumento da escala da reta selecionada
+                EscalarReta(key, L_Retas, MEscarlarMaior);
+            }
+        
+    }
+    else if (key == 'R'|| key == 'r' ) {
+        if (menu == 5 && key != -1) {
+                key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+                // Criar a matriz da escalar realizada para aumentar a reta
+                M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
+
+                // Realizar o aumento da escala da reta selecionada
+                RotacionaReta(key, L_Retas, MRotacaoInversaReta);
+            }
+        
+    }
+    else if(key=='M'|| key=='m'){
+
     }
 
     glutPostRedisplay();

@@ -225,7 +225,7 @@ int Add_Retas(float mouseX, float mouseY, int statusObjeto, Retas * L_Retas)
 }
 
 
-int RemoveReta(int chave, Retas * L_Retas)
+int RemoveReta(int key, Retas * L_Retas)
 {
 	// Se a lista de retas não foi criada ou a quantidade de retas for zero
 	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
@@ -234,9 +234,9 @@ int RemoveReta(int chave, Retas * L_Retas)
 	}
 	// Remover uma reta
 	else {
-		// Laço para percorrer a lista de retas a partir da chave da reta até o final da lista
+		// Laço para percorrer a lista de retas a partir da key da reta até o final da lista
         // Para não quebrar a integridade da lista
-		for (int i = chave; i < L_Retas->QtdRetas; i++) {
+		for (int i = key; i < L_Retas->QtdRetas; i++) {
 			L_Retas->retas[i] = L_Retas->retas[i + 1];
 		}
 
@@ -362,4 +362,70 @@ int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta){
 
 		return 1;
 	}
+}
+
+
+int EscalarReta(int key,Retas * L_Retas, M3x3 * MEscarlarMaior){
+    // Se a lista de retas estiver vazia ou a quantidade de retas for zero
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
+		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel escalar a reta!\n");
+		return 0;
+	}
+	// Escalar reta
+	else {
+		// Criar a matriz3Por3 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm o resultado das multiplicações necessárias para a escalar
+        M3x3 * MCompostaReta = MultiplicaMComposta(
+			L_Retas->retas[key].central.x, 
+			L_Retas->retas[key].central.y, 
+			MEscarlarMaior
+        );
+
+        // Criar duas matriz3Por1 para auxiliar nos cálculos
+        // Primeiramente, as matrizes contêm as coordenadas originais dos pontos inicial, central e final
+		M3x1 * MICompostaInicial = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
+		M3x1 * MCompostaFinal = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+
+		// Realizar a multiplicação gerando as matrizes rotacionando os pontos inicial, central e final da reta
+		MICompostaInicial = MultiplicaM3x3PorM3x1(MCompostaReta, MICompostaInicial);
+		MCompostaFinal = MultiplicaM3x3PorM3x1(MCompostaReta, MCompostaFinal);
+
+		// Atualizar a posição dos pontos inicial, central e final a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].inicial.x = MICompostaInicial->matriz[0][0];
+		L_Retas->retas[key].inicial.y = MICompostaInicial->matriz[0][1];
+		L_Retas->retas[key].final.x = MCompostaFinal->matriz[0][0];
+		L_Retas->retas[key].final.y = MCompostaFinal->matriz[0][1];
+
+		return 1;
+	}
+
+
+}
+
+int RotacionaReta(int key, Retas * L_Retas, M3x3 * MRotacaoReta){
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
+		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel rotacionar a reta!\n");
+		return 0;
+	}
+	else {
+
+		M3x3 *MComposta= MultiplicaMComposta(
+		L_Retas->retas[key].central.x, 
+		L_Retas->retas[key].central.y, 
+		MRotacaoReta);
+		M3x1 * MCompostaI = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
+		M3x1 * McompostaF = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+
+		// Realizar a multiplicação gerando as matrizes rotacionando os pontos inicial, central e final da reta
+		MCompostaI = MultiplicaM3x3PorM3x1(MComposta, MCompostaI);
+		McompostaF = MultiplicaM3x3PorM3x1(MComposta, McompostaF);
+
+		// Atualizar a posição dos pontos inicial, central e final a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].inicial.x = MCompostaI->matriz[0][0];
+		L_Retas->retas[key].inicial.y = MCompostaI->matriz[0][1];
+		L_Retas->retas[key].final.x = McompostaF->matriz[0][0];
+		L_Retas->retas[key].final.y = McompostaF->matriz[0][1];
+		return 1;
+	}
+
 }

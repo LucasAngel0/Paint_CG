@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 
 #include "matriz.h"
+#define PI 3.14159265358979323846
 
 M3x1 * criaM3x1(float x, float y)
 {
@@ -74,7 +75,7 @@ M3x3 * MultiplicaM3x3(M3x3 * M1, M3x3 * M2)
 {
     // Caso as variáveis passadas não tenham dados
     if (M1 == NULL || M2 == NULL) {
-        return 0;
+        return NULL; // Retornar NULL 
     }
     // Multiplicar duas M3x3
     else {
@@ -84,7 +85,9 @@ M3x3 * MultiplicaM3x3(M3x3 * M1, M3x3 * M2)
         for (int i = 0; i < 3; i++) {
             // Laço para percorrer as colunas da matriz
             for (int j = 0; j < 3; j++) {
-                MComposta->matriz[i][j] = M1->matriz[i][0] * M2->matriz[0][j] + M1->matriz[i][1] * M2->matriz[1][j] + M1->matriz[i][2] * M2->matriz[2][j];
+                MComposta->matriz[i][j] = M1->matriz[i][0] * M2->matriz[0][j] + 
+                                          M1->matriz[i][1] * M2->matriz[1][j] + 
+                                          M1->matriz[i][2] * M2->matriz[2][j];
             }
         }
 
@@ -121,12 +124,18 @@ M3x3 * CriaMRotacao(float angulo)
 {
     // Inicializando uma matriz3Por3
     M3x3 * MRotacao = criaM3x3();
+    float radiano= (angulo*PI)/180;
 
     // Inicializando a matriz para a rotação
-    MRotacao->matriz[0][0] = cosf(angulo);
-    MRotacao->matriz[0][1] = -sinf(angulo);
-    MRotacao->matriz[1][0] = sinf(angulo);
-    MRotacao->matriz[1][1] = cosf(angulo);
+    MRotacao->matriz[0][0] = cosf(radiano);
+    MRotacao->matriz[0][1] = -sinf(radiano);
+    MRotacao->matriz[1][0] = sinf(radiano);
+    MRotacao->matriz[1][1] = cosf(radiano);
+    MRotacao->matriz[0][2] = 0;
+    MRotacao->matriz[1][2] = 0;
+    MRotacao->matriz[2][2] = 1;
+    MRotacao->matriz[2][1] = 0;
+    MRotacao->matriz[2][0] = 0;
 
     return MRotacao;
 
@@ -138,6 +147,8 @@ M3x3 * CriaMEscalar(float escala)
     // Inicializando a matriz para a escala
     MEscalar->matriz[0][0] = escala;
     MEscalar->matriz[1][1] = escala;
+    MEscalar->matriz[2][2]=1;
+
 
     return MEscalar;
 }
