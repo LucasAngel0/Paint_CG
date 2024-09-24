@@ -39,6 +39,9 @@ int RemovePonto(int chave, Pontos * L_Pontos);
 int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos);
 void DesenhaPonto(Pontos * L_Pontos);
 int TransladaPonto(int key,Pontos *L_Pontos,M3x3 *MTranslacaoPonto);
+int RotacionaPonto(int chave, Pontos * L_Pontos, M3x3 * matrizRotacaoPonto);
+int RefletePonto(int key, Pontos * L_Pontos, M3x3 * MReflexaoPonto);
+
 
 
 #endif // PONTO_H

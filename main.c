@@ -246,7 +246,7 @@ void funcoesMouse(int botaoMouse, int statusMouse, int x, int y)
     glutPostRedisplay();
 }
 
-void Teclado(unsigned char key, int x, int y)
+void Teclado(unsigned char tecla, int x, int y)
 {
     float corte = 0.5;
     float angulo = 45.0;
@@ -257,7 +257,7 @@ void Teclado(unsigned char key, int x, int y)
     mouseY = altura - y;   // Localização do eixo y (vertical - altura)
 
     // Verificar a tecla pressionada para excluir objetos selecionados da tela (D - Delete)
-    if (key == 'D' || key == 'd') {
+    if (tecla == 'D' || tecla == 'd') {
         
         // Excluir ponto
         if (menu == 4 && key != -1) {
@@ -288,7 +288,7 @@ void Teclado(unsigned char key, int x, int y)
     }
 
     // Verificar a tecla pressionada para finalizar o polígono (F - Finish)
-    else if (key == 'F' || key == 'f') {
+    else if (tecla == 'F' || tecla == 'f') {
         if (menu == 3 && EstadoDoObjeto == 1) {
             // Finalizar o desenho do polígono
             FinalizaPoligono(EstadoDoObjeto, L_Poligonos);
@@ -298,7 +298,7 @@ void Teclado(unsigned char key, int x, int y)
             EstadoDoObjeto = -1;
         }
     }
-    else if (key == 'L'|| key == 'l' ) {
+    else if (tecla == 'L'|| tecla == 'l' ) {
         if (menu == 5 && key != -1) {
                 key = Seleciona_Reta(mouseX, mouseY, L_Retas);
                 // Criar a matriz da escalar realizada para aumentar a reta
@@ -309,18 +309,37 @@ void Teclado(unsigned char key, int x, int y)
             }
         
     }
-    else if (key == 'R'|| key == 'r' ) {
+    else if (tecla == 'R'|| tecla == 'r' ) {
         if (menu == 5 && key != -1) {
-                key = Seleciona_Reta(mouseX, mouseY, L_Retas);
-                // Criar a matriz da escalar realizada para aumentar a reta
-                M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
+            key = Seleciona_Reta(mouseX, mouseY, L_Retas);
+            M3x3 * MRotacaoInversaReta = CriaMRotacaoInversa(angulo);
+            RotacionaReta(key, L_Retas, MRotacaoInversaReta);
+        }
+        
+        
+        else if(menu==4|| key!=-1){
+            key = SelecionaPonto(mouseX, mouseY, L_Pontos);
+            M3x3 * MRotacao = CriaMRotacaoInversa(angulo);
+            RotacionaPonto(key,L_Pontos,MRotacao);
 
-                // Realizar o aumento da escala da reta selecionada
-                RotacionaReta(key, L_Retas, MRotacaoInversaReta);
-            }
+
+        }
+          
         
     }
-    else if(key=='M'|| key=='m'){
+    else if(tecla=='M'|| tecla=='m'){
+        if (menu == 4 && key != -1) {
+            key = SelecionaPonto(mouseX, mouseY, L_Pontos);
+            M3x3 * MReflexaoPonto = CriaMReflexaoOrigem();
+            RefletePonto(key, L_Pontos, MReflexaoPonto);
+        }
+        else if(menu==5 && key !=-1){
+            key= Seleciona_Reta(mouseX,mouseY,L_Retas);
+            M3x3 * MReflexaoReta = CriaMReflexaoOrigem();
+            RefleteReta(key, L_Retas, MReflexaoReta);
+
+        }
+
 
     }
 

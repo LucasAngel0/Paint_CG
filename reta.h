@@ -31,8 +31,9 @@ int VerificaPontoReta(float mouseX, float mouseY, float x1, float y1, float x2, 
 void desenharRetas(Retas * L_Retas);
 
 int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta);
+int RefleteReta(int chave, Retas * L_Retas, M3x3 * matrizReflexaoReta);
 int EscalarReta(int key,Retas * L_Retas, M3x3 * MEscarlarMaior);
-int RotacionaReta(int key, Retas * listaRetas, M3x3 * MRotacaoReta);
+int RotacionaReta(int key, Retas * L_Retas, M3x3 * MRotacaoReta);
 
 
 #endif // RETA_H

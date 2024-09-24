@@ -283,7 +283,7 @@ int Seleciona_Reta(float mouseX, float mouseY, Retas * L_Retas)
 int VerificaPontoReta(float mouseX, float mouseY, float x1, float y1, float x2, float y2)
 {
 	float m, b, aux;
-	int tolerancia = 8; 
+	int tolerancia = 12; 
 
 	// Baseado na equação da reta: y = mx + b
 	// Pode ser encontrada tendo dois pontos que pertencem a reta, assim encontramos o valor de m
@@ -341,12 +341,12 @@ int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta){
         // Primeiramente, as matrizes contêm as coordenadas originais dos pontos da reta
 		M3x1 * MCompostaInicial = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
 		M3x1 * MCompostaCentral = criaM3x1(L_Retas->retas[key].central.x, L_Retas->retas[key].central.y);
-		M3x1 * MCompostaFinal = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+		M3x1 * MCompostaF = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
 
 		// Realizar a multiplicação transformação de cada um dos pontos inicial, central e final
 		MCompostaInicial = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaInicial);
 		MCompostaCentral = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaCentral);
-		MCompostaFinal = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaFinal);
+		MCompostaF = MultiplicaM3x3PorM3x1(MTranslacaoReta, MCompostaF);
 
 		// Atualizar a posição do ponto inicial a partir do resultado do cálculo da transformação
 		L_Retas->retas[key].inicial.x = MCompostaInicial->matriz[0][0];
@@ -357,8 +357,8 @@ int transladarReta(int key, Retas * L_Retas, M3x3 * MTranslacaoReta){
 		L_Retas->retas[key].central.y = MCompostaCentral->matriz[0][1];
 
 		// Atualizar a posição do ponto final a partir do resultado do cálculo da transformação
-		L_Retas->retas[key].final.x = MCompostaFinal->matriz[0][0];
-		L_Retas->retas[key].final.y = MCompostaFinal->matriz[0][1];
+		L_Retas->retas[key].final.x = MCompostaF->matriz[0][0];
+		L_Retas->retas[key].final.y = MCompostaF->matriz[0][1];
 
 		return 1;
 	}
@@ -384,17 +384,17 @@ int EscalarReta(int key,Retas * L_Retas, M3x3 * MEscarlarMaior){
         // Criar duas matriz3Por1 para auxiliar nos cálculos
         // Primeiramente, as matrizes contêm as coordenadas originais dos pontos inicial, central e final
 		M3x1 * MICompostaInicial = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
-		M3x1 * MCompostaFinal = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+		M3x1 * MCompostaF = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
 
 		// Realizar a multiplicação gerando as matrizes rotacionando os pontos inicial, central e final da reta
 		MICompostaInicial = MultiplicaM3x3PorM3x1(MCompostaReta, MICompostaInicial);
-		MCompostaFinal = MultiplicaM3x3PorM3x1(MCompostaReta, MCompostaFinal);
+		MCompostaF = MultiplicaM3x3PorM3x1(MCompostaReta, MCompostaF);
 
 		// Atualizar a posição dos pontos inicial, central e final a partir do resultado do cálculo da transformação
 		L_Retas->retas[key].inicial.x = MICompostaInicial->matriz[0][0];
 		L_Retas->retas[key].inicial.y = MICompostaInicial->matriz[0][1];
-		L_Retas->retas[key].final.x = MCompostaFinal->matriz[0][0];
-		L_Retas->retas[key].final.y = MCompostaFinal->matriz[0][1];
+		L_Retas->retas[key].final.x = MCompostaF->matriz[0][0];
+		L_Retas->retas[key].final.y = MCompostaF->matriz[0][1];
 
 		return 1;
 	}
@@ -414,10 +414,12 @@ int RotacionaReta(int key, Retas * L_Retas, M3x3 * MRotacaoReta){
 		L_Retas->retas[key].central.y, 
 		MRotacaoReta);
 		M3x1 * MCompostaI = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
+		M3x1 * MCompostaM = criaM3x1(L_Retas->retas[key].central.x, L_Retas->retas[key].central.y);
 		M3x1 * McompostaF = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
 
 		// Realizar a multiplicação gerando as matrizes rotacionando os pontos inicial, central e final da reta
 		MCompostaI = MultiplicaM3x3PorM3x1(MComposta, MCompostaI);
+		MCompostaM= MultiplicaM3x3PorM3x1(MComposta,MCompostaM);
 		McompostaF = MultiplicaM3x3PorM3x1(MComposta, McompostaF);
 
 		// Atualizar a posição dos pontos inicial, central e final a partir do resultado do cálculo da transformação
@@ -425,6 +427,42 @@ int RotacionaReta(int key, Retas * L_Retas, M3x3 * MRotacaoReta){
 		L_Retas->retas[key].inicial.y = MCompostaI->matriz[0][1];
 		L_Retas->retas[key].final.x = McompostaF->matriz[0][0];
 		L_Retas->retas[key].final.y = McompostaF->matriz[0][1];
+		return 1;
+	}
+
+}
+
+int RefleteReta(int key, Retas * L_Retas, M3x3 * matrizReflexaoReta){
+	// Se a lista de retas estiver vazia ou a quantidade de retas for zero
+	if (L_Retas == NULL || L_Retas->QtdRetas == 0) {
+		printf("Lista de retas nao foi criada ou nao ha retas! Nao e possivel refletir a reta!\n");
+		return 0;
+	}
+	// Refletir reta
+	else {
+        // Criar matrizes de ponto para auxiliar nos cálculos
+        // Primeiramente, as matrizes contêm as coordenadas originais dos pontos da reta
+		M3x1 * MCompostaI = criaM3x1(L_Retas->retas[key].inicial.x, L_Retas->retas[key].inicial.y);
+		M3x1 * MCompostaC = criaM3x1(L_Retas->retas[key].central.x, L_Retas->retas[key].central.y);
+		M3x1 * MCompostaF = criaM3x1(L_Retas->retas[key].final.x, L_Retas->retas[key].final.y);
+
+		// Realizar a multiplicação transformação de cada um dos pontos inicial, central e final
+		MCompostaI = MultiplicaM3x3PorM3x1(matrizReflexaoReta, MCompostaI);
+		MCompostaC = MultiplicaM3x3PorM3x1(matrizReflexaoReta, MCompostaC);
+		MCompostaF = MultiplicaM3x3PorM3x1(matrizReflexaoReta, MCompostaF);
+
+		// Atualizar a posição do ponto inicial a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].inicial.x = MCompostaI->matriz[0][0];
+		L_Retas->retas[key].inicial.y = MCompostaI->matriz[0][1];
+
+		// Atualizar a posição do ponto central a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].central.x = MCompostaC->matriz[0][0];
+		L_Retas->retas[key].central.y = MCompostaC->matriz[0][1];
+
+		// Atualizar a posição do ponto final a partir do resultado do cálculo da transformação
+		L_Retas->retas[key].final.x = MCompostaF->matriz[0][0];
+		L_Retas->retas[key].final.y = MCompostaF->matriz[0][1];
+
 		return 1;
 	}
 

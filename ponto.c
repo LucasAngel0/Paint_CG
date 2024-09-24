@@ -150,7 +150,7 @@ int AddPonto(float mouseX, float mouseY, Pontos * L_Pontos)
 /*
  * FUNÇÃO PARA EXCLUIR UM PONTO DA TELA
  */
-int RemovePonto(int chave, Pontos * L_Pontos)
+int RemovePonto(int key, Pontos * L_Pontos)
 {
     // Se a lista de pontos não foi criada ou a quantidade de pontos for zero
     if (L_Pontos == NULL || L_Pontos->QtdPontos == 0) {
@@ -159,9 +159,9 @@ int RemovePonto(int chave, Pontos * L_Pontos)
     }
     // Excluir um ponto
     else {
-        // Laço para percorrer a lista de pontos a partir da chave do ponto até o final da lista
+        // Laço para percorrer a lista de pontos a partir da key do ponto até o final da lista
         // Para não quebrar a integridade da lista
-        for (int i = chave; i < L_Pontos->QtdPontos; i++) {
+        for (int i = key; i < L_Pontos->QtdPontos; i++) {
             L_Pontos->pontos[i] = L_Pontos->pontos[i + 1];
         }
 
@@ -206,16 +206,16 @@ int SelecionaPonto(float mouseX, float mouseY, Pontos * L_Pontos)
 /*
  * FUNÇÃO PARA DESENHAR OS PONTOS NA TELA
  */
-void DesenhaPonto(Pontos * listaPontos)
+void DesenhaPonto(Pontos * L_Pontos)
 {
     glPointSize(6.0);
     glBegin(GL_POINTS);
 
-    for (int i = 0; i < listaPontos->QtdPontos; i++) {
+    for (int i = 0; i < L_Pontos->QtdPontos; i++) {
         // Imprimindo os valores e intensidades de cores RGB
-        glColor3f(listaPontos->pontos[i].cor.Red, listaPontos->pontos[i].cor.Green, listaPontos->pontos[i].cor.Blue);
+        glColor3f(L_Pontos->pontos[i].cor.Red, L_Pontos->pontos[i].cor.Green, L_Pontos->pontos[i].cor.Blue);
         // Posicionando o ponto na largura e altura corretas do mouse
-        glVertex2f(listaPontos->pontos[i].x, listaPontos->pontos[i].y);
+        glVertex2f(L_Pontos->pontos[i].x, L_Pontos->pontos[i].y);
 
 
     }
@@ -241,5 +241,55 @@ int TransladaPonto(int key,Pontos *L_Pontos,M3x3 * MTranslacaoPonto){
 
         return 1;
     }
+}
+
+
+int RotacionaPonto(int key, Pontos * L_Pontos, M3x3 * MRotacaoPonto){
+
+    // Se a lista de pontos não foi criada ou a quantidade de pontos for zero
+    if (L_Pontos == NULL || L_Pontos->QtdPontos == 0) {
+        printf("Lista de pontos nao foi criada ou nao ha pontos! Nao e possivel rotacionar o ponto!\n");
+        return 0;
+    }
+    // Rotacionar ponto
+    else {
+        // Criar a matriz3Por1 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm as coordenadas originais do ponto
+        M3x1 * MCompostaPonto = criaM3x1(L_Pontos->pontos[key].x, L_Pontos->pontos[key].y);
+
+        // Realizar a multiplicação gerando a matriz composta
+        MCompostaPonto = MultiplicaM3x3PorM3x1(MRotacaoPonto, MCompostaPonto);
+
+        // Modifica a posição do ponto a partir do resultado do cálculo da rotação
+        L_Pontos->pontos[key].x = MCompostaPonto->matriz[0][0];
+        L_Pontos->pontos[key].y = MCompostaPonto->matriz[0][1];
+
+        return 1;
+    }
+
+    
+}
+
+int RefletePonto(int key, Pontos * L_Pontos, M3x3 * MReflexaoPonto){
+    if (L_Pontos == NULL || L_Pontos->QtdPontos == 0) {
+        printf("Lista de pontos nao foi criada ou nao ha pontos! Nao e possivel refletir o ponto!\n");
+        return 0;
+    }
+    // Refletir ponto
+    else {
+        // Criar a matriz3Por1 para auxiliar nos cálculos
+        // Primeiramente, a matriz contêm as coordenadas originais do ponto
+        M3x1 * MCompostaPonto = criaM3x1(L_Pontos->pontos[key].x, L_Pontos->pontos[key].y);
+
+        // Realizar a multiplicação gerando a matriz composta
+        MCompostaPonto = MultiplicaM3x3PorM3x1(MReflexaoPonto, MCompostaPonto);
+
+        // Modifica a posição do ponto a partir do resultado do cálculo da rotação
+        L_Pontos->pontos[key].x = MCompostaPonto->matriz[0][0];
+        L_Pontos->pontos[key].y = MCompostaPonto->matriz[0][1];
+
+        return 1;
+    }
+
 }
 
